@@ -73,7 +73,7 @@ if( isset($_POST['host'],$_POST['name'],$_POST['user'],$_POST['passwd'],$_POST['
 
 		@flock($handle, LOCK_UN);
 	}
-			
+
 	@fclose($handle);
 
 	$config_str = "<?php";
@@ -82,123 +82,123 @@ if( isset($_POST['host'],$_POST['name'],$_POST['user'],$_POST['passwd'],$_POST['
 
 	$config_str .= '$admin_config = array(';
 
-	$config_str .= '"username"=>"'.$admin_user.'",';
+			$config_str .= '"username"=>"'.$admin_user.'",';
 
-	$config_str .= '"password"=>"'.md5($admin_pass).'",';
+			$config_str .= '"password"=>"'.md5($admin_pass).'",';
 
-	$config_str .= '"authcode"=>"'.createSecureKey().'"';
+			$config_str .= '"authcode"=>"'.createSecureKey().'"';
 
-	$config_str .= ");\n";
+			$config_str .= ");\n";
 
-	$config_str .= '?>';
+			$config_str .= '?>';
 
-	$handle = @fopen($file_admin, 'w');
+			$handle = @fopen($file_admin, 'w');
 
-	if ( @flock($handle, LOCK_EX) )
-	{
-		@fwrite($handle, $config_str);
+			if ( @flock($handle, LOCK_EX) )
+			{
+			@fwrite($handle, $config_str);
 
-		@flock($handle, LOCK_UN);
-	}
-			
-	@fclose($handle);
+			@flock($handle, LOCK_UN);
+			}
 
-	$config_str = "<?php";
+			@fclose($handle);
 
-	$config_str .= "\n";
+			$config_str = "<?php";
 
-	$config_str .= '$mysql_host		= "'.$db_host.'";';
+			$config_str .= "\n";
 
-	$config_str .= "\n\n";
+			$config_str .= '$mysql_host		= "'.$db_host.'";';
 
-	$config_str .= '$mysql_user		= "'.$db_user.'";';
+			$config_str .= "\n\n";
 
-	$config_str .= "\n\n";
+			$config_str .= '$mysql_user		= "'.$db_user.'";';
 
-	$config_str .= '$mysql_pass		= "'.$db_pass.'";';
+			$config_str .= "\n\n";
 
-	$config_str .= "\n\n";
+			$config_str .= '$mysql_pass		= "'.$db_pass.'";';
 
-	$config_str .= '$mysql_dbname	= "'.$db_name.'";';
+			$config_str .= "\n\n";
 
-	$config_str .= "\n\n";
+			$config_str .= '$mysql_dbname	= "'.$db_name.'";';
 
-	$config_str .= '$mysql_prefix	= "'.$db_prefix.'";';
+			$config_str .= "\n\n";
 
-	$config_str .= "\n";
+			$config_str .= '$mysql_prefix	= "'.$db_prefix.'";';
 
-	$config_str .= '?>';
+			$config_str .= "\n";
 
-	$handle = @fopen($file_mysql, 'w');
+			$config_str .= '?>';
 
-	if ( @flock($handle, LOCK_EX) )
-	{
-		@fwrite($handle, $config_str);
+			$handle = @fopen($file_mysql, 'w');
 
-		@flock($handle, LOCK_UN);
-	}
-			
-	@fclose($handle);
+			if ( @flock($handle, LOCK_EX) )
+			{
+				@fwrite($handle, $config_str);
 
-	$link = mysql_connect($db_host, $db_user, $db_pass) or die("<script>alert('Mysql连接失败！错误代码：".mysql_errno() ."');</script>");
+				@flock($handle, LOCK_UN);
+			}
 
-	mysql_query("CREATE DATABASE IF NOT EXISTS ".$db_name,$link) or die("<script>alert('数据库创建失败！错误代码：".mysql_errno() ."');</script>");
+			@fclose($handle);
 
-	mysql_select_db($db_name, $link) or die("<script>alert('数据库连接失败！错误代码：".mysql_errno() ."');</script>");
+			$link = mysql_connect($db_host, $db_user, $db_pass) or die("<script>alert('Mysql连接失败！错误代码：".mysql_errno() ."');</script>");
 
-	mysql_query("DROP TABLE IF EXISTS `".$db_prefix."blog`");
+			mysql_query("CREATE DATABASE IF NOT EXISTS ".$db_name,$link) or die("<script>alert('数据库创建失败！错误代码：".mysql_errno() ."');</script>");
 
-	mysql_query("CREATE TABLE `".$db_prefix."blog` (
-	  `mid` mediumint(8) NOT NULL AUTO_INCREMENT,
-	  `message` char(140) NOT NULL,
-	  `picture` char(50) NOT NULL,
-	  `dateline` int(10) NOT NULL,
-	  `origin` char(10) NOT NULL,
-	  `comments` mediumint(8) NOT NULL,
-	  PRIMARY KEY (`mid`),
-	  KEY `dateline` (`dateline`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+			mysql_select_db($db_name, $link) or die("<script>alert('数据库连接失败！错误代码：".mysql_errno() ."');</script>");
 
-	mysql_query("DROP TABLE IF EXISTS `".$db_prefix."comment`");
+			mysql_query("DROP TABLE IF EXISTS `".$db_prefix."blog`");
 
-	mysql_query("CREATE TABLE `".$db_prefix."comment` (
-	  `cid` mediumint(8) NOT NULL AUTO_INCREMENT,
-	  `mid` mediumint(8) NOT NULL,
-	  `nickname` char(15) NOT NULL,
-	  `blogurl` char(60) NOT NULL,
-	  `message` char(70) NOT NULL,
-	  `dateline` int(10) NOT NULL,
-	  `blogmaster` tinyint(1) NOT NULL,
-	  `display` tinyint(1) NOT NULL,
-	  PRIMARY KEY (`cid`),
-	  KEY `mid` (`mid`,`cid`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+			mysql_query("CREATE TABLE `".$db_prefix."blog` (
+				`mid` mediumint(8) NOT NULL AUTO_INCREMENT,
+				`message` char(140) NOT NULL,
+				`picture` char(50) NOT NULL,
+				`dateline` int(10) NOT NULL,
+				`origin` char(10) NOT NULL,
+				`comments` mediumint(8) NOT NULL,
+				PRIMARY KEY (`mid`),
+				KEY `dateline` (`dateline`)
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
-	mysql_query("DROP TABLE IF EXISTS `".$db_prefix."friend`");
+			mysql_query("DROP TABLE IF EXISTS `".$db_prefix."comment`");
 
-	mysql_query("CREATE TABLE `".$db_prefix."friend` (
-	  `fid` mediumint(8) NOT NULL AUTO_INCREMENT,
-	  `ftype` tinyint(1) NOT NULL,
-	  `furl` char(90) NOT NULL,
-	  `fcode` char(16) NOT NULL,
-	  `fupdate` int(10) NOT NULL,
-	  `friendavatar` char(50) NOT NULL,
-	  `friendname` char(15) NOT NULL,
-	  `friendmid` mediumint(8) NOT NULL,
-	  `friendmsg` char(140) NOT NULL,
-	  `friendpic` char(50) NOT NULL,
-	  `friendtime` int(10) NOT NULL,
-	  `friendorigin` char(10) NOT NULL,
-	  PRIMARY KEY (`fid`),
-	  KEY `ftype` (`ftype`,`fupdate`,`friendtime`),
-	  KEY `furl` (`ftype`,`furl`,`fcode`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+			mysql_query("CREATE TABLE `".$db_prefix."comment` (
+				`cid` mediumint(8) NOT NULL AUTO_INCREMENT,
+				`mid` mediumint(8) NOT NULL,
+				`nickname` char(15) NOT NULL,
+				`blogurl` char(60) NOT NULL,
+				`message` char(70) NOT NULL,
+				`dateline` int(10) NOT NULL,
+				`blogmaster` tinyint(1) NOT NULL,
+				`display` tinyint(1) NOT NULL,
+				PRIMARY KEY (`cid`),
+				KEY `mid` (`mid`,`cid`)
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
-	mysql_close($link);
+			mysql_query("DROP TABLE IF EXISTS `".$db_prefix."friend`");
 
-	@unlink("install.php");
+			mysql_query("CREATE TABLE `".$db_prefix."friend` (
+				`fid` mediumint(8) NOT NULL AUTO_INCREMENT,
+				`ftype` tinyint(1) NOT NULL,
+				`furl` char(90) NOT NULL,
+				`fcode` char(16) NOT NULL,
+				`fupdate` int(10) NOT NULL,
+				`friendavatar` char(50) NOT NULL,
+				`friendname` char(15) NOT NULL,
+				`friendmid` mediumint(8) NOT NULL,
+				`friendmsg` char(140) NOT NULL,
+				`friendpic` char(50) NOT NULL,
+				`friendtime` int(10) NOT NULL,
+				`friendorigin` char(10) NOT NULL,
+				PRIMARY KEY (`fid`),
+				KEY `ftype` (`ftype`,`fupdate`,`friendtime`),
+				KEY `furl` (`ftype`,`furl`,`fcode`)
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
-	die("<script>alert('安装成功！管理员用户名：".$admin_user."，密码：".$admin_pass."');top.location.href='./'</script>");
+			mysql_close($link);
+
+			@unlink("install.php");
+
+			die("<script>alert('安装成功！管理员用户名：".$admin_user."，密码：".$admin_pass."');top.location.href='./'</script>");
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

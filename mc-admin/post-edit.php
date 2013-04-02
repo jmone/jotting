@@ -11,125 +11,125 @@ $post_time        = '';
 $post_can_comment = '';
 $error_msg        = '';
 $succeed          = false;
-  
+
 if (isset($_POST['_IS_POST_BACK_'])) {
-  $post_id          = $_POST['id'];
-  $post_state       = $_POST['state'];
-  $post_title       = trim($_POST['title']);
-  $post_content     = get_magic_quotes_gpc() ? stripslashes(trim($_POST['content'])) : trim($_POST['content']);
-  $post_tags        = explode(',', trim($_POST['tags']));
-  $post_date        = date("Y-m-d");
-  $post_time        = date("H:i:s");
-  $post_can_comment  = $_POST['can_comment'];
+	$post_id          = $_POST['id'];
+	$post_state       = $_POST['state'];
+	$post_title       = trim($_POST['title']);
+	$post_content     = get_magic_quotes_gpc() ? stripslashes(trim($_POST['content'])) : trim($_POST['content']);
+	$post_tags        = explode(',', trim($_POST['tags']));
+	$post_date        = date("Y-m-d");
+	$post_time        = date("H:i:s");
+	$post_can_comment  = $_POST['can_comment'];
 
-  if ($_POST['year'] != '')
-    $post_date = substr_replace($post_date, $_POST['year'], 0, 4);
+	if ($_POST['year'] != '')
+		$post_date = substr_replace($post_date, $_POST['year'], 0, 4);
 
-  if ($_POST['month'] != '')
-    $post_date = substr_replace($post_date, $_POST['month'], 5, 2);
+	if ($_POST['month'] != '')
+		$post_date = substr_replace($post_date, $_POST['month'], 5, 2);
 
-  if ($_POST['day'] != '')
-    $post_date = substr_replace($post_date, $_POST['day'], 8, 2);
+	if ($_POST['day'] != '')
+		$post_date = substr_replace($post_date, $_POST['day'], 8, 2);
 
-  if ($_POST['hourse'] != '')
-    $post_time = substr_replace($post_time, $_POST['hourse'], 0, 2);
+	if ($_POST['hourse'] != '')
+		$post_time = substr_replace($post_time, $_POST['hourse'], 0, 2);
 
-  if ($_POST['minute'] != '')
-    $post_time = substr_replace($post_time, $_POST['minute'], 3, 2);
+	if ($_POST['minute'] != '')
+		$post_time = substr_replace($post_time, $_POST['minute'], 3, 2);
 
-  if ($_POST['second'] != '')
-    $post_time = substr_replace($post_time, $_POST['second'], 6, 2);
+	if ($_POST['second'] != '')
+		$post_time = substr_replace($post_time, $_POST['second'], 6, 2);
 
-  $post_tags_count = count($post_tags);
-  
-  for ($i = 0; $i < $post_tags_count; $i ++) {
-    $trim = trim($post_tags[$i]);
-    if ($trim == '') {
-      unset($post_tags[$i]);
-    } else {
-      $post_tags[$i] = $trim;
-    }
-  }
-  
-  reset($post_tags);
-  
-  if ($post_title == '') {
-    $error_msg = '文章标题不能为空';
-  }
-  else {
-    if ($post_id == '') {
-      $file_names = shorturl($post_title);
-      
-      foreach ($file_names as $file_name) {
-        $file_path = '../mc-files/posts/data/'.$file_name.'.dat';
-        
-        if (!is_file($file_path)) {
-          $post_id = $file_name;
-          break;
-        }
-      }
-    }
-    else {
-      $file_path = '../mc-files/posts/data/'.$post_id.'.dat';
-  
-      $data = unserialize(file_get_contents($file_path));
-      
-      $post_old_state = $data['state'];
-      
-      if ($post_old_state != $post_state) {
-        $index_file = '../mc-files/posts/index/'.$post_old_state.'.php';
-        
-        require $index_file;
-        
-        unset($mc_posts[$post_id]);
-        
-        file_put_contents($index_file,
-          "<?php\n\$mc_posts=".var_export($mc_posts, true)."\n?>"
-        );
-      }
-    }
-    
-    $data = array(
-      'id'          => $post_id,
-      'state'       => $post_state,
-      'title'       => $post_title,
-      'tags'        => $post_tags,
-      'date'        => $post_date,
-      'time'        => $post_time,
-      'can_comment'  => $post_can_comment,
-    );
-    
-    $index_file = '../mc-files/posts/index/'.$post_state.'.php';
-    
-    require $index_file;
-    
-    $mc_posts[$post_id] = $data;
+	$post_tags_count = count($post_tags);
 
-    uasort($mc_posts, "post_sort");   
- 
-    file_put_contents($index_file,
-      "<?php\n\$mc_posts=".var_export($mc_posts, true)."\n?>"
-    );
-    
-    $data['content'] = $post_content;
-    
-    file_put_contents($file_path, serialize($data));
-    
-    $succeed = true;
-  }
+	for ($i = 0; $i < $post_tags_count; $i ++) {
+		$trim = trim($post_tags[$i]);
+		if ($trim == '') {
+			unset($post_tags[$i]);
+		} else {
+			$post_tags[$i] = $trim;
+		}
+	}
+
+	reset($post_tags);
+
+	if ($post_title == '') {
+		$error_msg = '文章标题不能为空';
+	}
+	else {
+		if ($post_id == '') {
+			$file_names = shorturl($post_title);
+
+			foreach ($file_names as $file_name) {
+				$file_path = '../mc-files/posts/data/'.$file_name.'.dat';
+
+				if (!is_file($file_path)) {
+					$post_id = $file_name;
+					break;
+				}
+			}
+		}
+		else {
+			$file_path = '../mc-files/posts/data/'.$post_id.'.dat';
+
+			$data = unserialize(file_get_contents($file_path));
+
+			$post_old_state = $data['state'];
+
+			if ($post_old_state != $post_state) {
+				$index_file = '../mc-files/posts/index/'.$post_old_state.'.php';
+
+				require $index_file;
+
+				unset($mc_posts[$post_id]);
+
+				file_put_contents($index_file,
+						"<?php\n\$mc_posts=".var_export($mc_posts, true)."\n?>"
+						);
+			}
+		}
+
+		$data = array(
+				'id'          => $post_id,
+				'state'       => $post_state,
+				'title'       => $post_title,
+				'tags'        => $post_tags,
+				'date'        => $post_date,
+				'time'        => $post_time,
+				'can_comment'  => $post_can_comment,
+			     );
+
+		$index_file = '../mc-files/posts/index/'.$post_state.'.php';
+
+		require $index_file;
+
+		$mc_posts[$post_id] = $data;
+
+		uasort($mc_posts, "post_sort");   
+
+		file_put_contents($index_file,
+				"<?php\n\$mc_posts=".var_export($mc_posts, true)."\n?>"
+				);
+
+		$data['content'] = $post_content;
+
+		file_put_contents($file_path, serialize($data));
+
+		$succeed = true;
+	}
 } else if (isset($_GET['id'])) {
-  $file_path = '../mc-files/posts/data/'.$_GET['id'].'.dat';
-  
-  $data = unserialize(file_get_contents($file_path));
-  
-  $post_id      = $data['id'];
-  $post_state   = $data['state'];
-  $post_title   = $data['title'];
-  $post_content = $data['content'];
-  $post_tags    = $data['tags'];
-  $post_date    = $data['date'];
-  $post_time    = $data['time'];
-  $post_can_comment = isset($data['can_comment']) ? $data['can_comment'] : '1';
+	$file_path = '../mc-files/posts/data/'.$_GET['id'].'.dat';
+
+	$data = unserialize(file_get_contents($file_path));
+
+	$post_id      = $data['id'];
+	$post_state   = $data['state'];
+	$post_title   = $data['title'];
+	$post_content = $data['content'];
+	$post_tags    = $data['tags'];
+	$post_date    = $data['date'];
+	$post_time    = $data['time'];
+	$post_can_comment = isset($data['can_comment']) ? $data['can_comment'] : '1';
 }
 ?>
 <script type="text/javascript">
