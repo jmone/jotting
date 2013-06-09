@@ -21,7 +21,7 @@ if (isset($_POST['login'])) {
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>MiniCMS</title>
+  <title>Jotting</title>
   <style type="text/css">
 * { font-family:"Microsoft YaHei",Segoe UI,Tahoma,Arial,Verdana,sans-serif; }
 body { background:#f9f9f9; font-size:14px; }

@@ -11,17 +11,14 @@ function load_posts() {
     if ($_GET['state'] == 'draft') {
       $state = 'draft';
       $index_file = '../mc-files/posts/index/draft.php';
-    }
-    else if ($_GET['state'] == 'delete'){
+    } else if ($_GET['state'] == 'delete'){
       $state = 'delete';
       $index_file = '../mc-files/posts/index/delete.php';
-    }
-    else {
+    } else {
       $state = 'publish';
       $index_file = '../mc-files/posts/index/publish.php';
     }
-  }
-  else {
+  } else {
     $state = 'publish';
     $index_file = '../mc-files/posts/index/publish.php';
   }
